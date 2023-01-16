@@ -16,4 +16,5 @@ for i in range(500):
     time.sleep(1/600)
     backLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("BackLeg")
 print(backLegSensorValues)
+numpy.save('/Users/adahnke1/Documents/GitHub/mybots/data/backLegvalues', backLegSensorValues, allow_pickle = True, fix_imports = True)
 p.disconnect()
