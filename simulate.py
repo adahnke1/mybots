@@ -4,6 +4,15 @@ import pybullet_data
 import pyrosim.pyrosim as pyrosim
 import numpy
 import random
+FrontLegamplitude = (numpy.pi)/4
+FrontLegfrequency = 10
+FrontLegphaseOffset = (numpy.pi)/4
+BackLegamplitude = (numpy.pi)/8
+BackLegfrequency = 10
+BackLegphaseOffset = 0
+targetAngles = numpy.linspace(0, 2*numpy.pi, 1000)
+FrontLegtargetAngles = FrontLegamplitude*numpy.sin(FrontLegfrequency*targetAngles+FrontLegphaseOffset)
+BackLegtargetAngles = BackLegamplitude*numpy.sin(BackLegfrequency*targetAngles+BackLegphaseOffset)
 physicsClient = p.connect(p.GUI)
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
 p.setGravity(0,0,-9.8)
@@ -13,20 +22,19 @@ p.loadSDF("world.sdf")
 pyrosim.Prepare_To_Simulate(robotId)
 backLegSensorValues = numpy.zeros(1000)
 frontLegSensorValues = numpy.zeros(1000)
-targetAngles = ((numpy.pi)/4)*(numpy.sin(numpy.linspace(0, 2*(numpy.pi), 1000)))
-amplitude = (numpy.pi)/4
-frequency = 1
-phaseOffset = 0
+#targetAngles = ((numpy.pi)/4)*(numpy.sin(numpy.linspace(0, 2*(numpy.pi), 1000)))
+#print(targetAngles)
 for i in range(1000):
     p.stepSimulation()
     time.sleep(1/600)
     backLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("BackLeg")
     frontLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("FrontLeg")
-    pyrosim.Set_Motor_For_Joint(bodyIndex = robotId,jointName = b"Torso_BackLeg",controlMode = p.POSITION_CONTROL,targetPosition = targetAngles[i],maxForce = 500)
-    pyrosim.Set_Motor_For_Joint(bodyIndex = robotId,jointName = b"Torso_FrontLeg",controlMode = p.POSITION_CONTROL,targetPosition = targetAngles[i],maxForce = 500)
+    pyrosim.Set_Motor_For_Joint(bodyIndex = robotId,jointName = b"Torso_BackLeg",controlMode = p.POSITION_CONTROL,targetPosition = BackLegtargetAngles[i],maxForce = 500)
+    pyrosim.Set_Motor_For_Joint(bodyIndex = robotId,jointName = b"Torso_FrontLeg",controlMode = p.POSITION_CONTROL,targetPosition = FrontLegtargetAngles[i],maxForce = 500)
 print(backLegSensorValues)
 print(frontLegSensorValues)
 numpy.save('/Users/adahnke1/Documents/GitHub/mybots/data/backLegvalues', backLegSensorValues, allow_pickle = True, fix_imports = True)
 numpy.save('/Users/adahnke1/Documents/GitHub/mybots/data/frontLegvalues', frontLegSensorValues, allow_pickle = True, fix_imports = True)
-numpy.save('/Users/adahnke1/Documents/GitHub/mybots/data/targetAngles', (targetAngles), allow_pickle = True, fix_imports = True)
+numpy.save('/Users/adahnke1/Documents/GitHub/mybots/data/BackLegtargetAngles', (BackLegtargetAngles), allow_pickle = True, fix_imports = True)
+numpy.save('/Users/adahnke1/Documents/GitHub/mybots/data/FrontLegtargetAngles', (FrontLegtargetAngles), allow_pickle = True, fix_imports = True)
 p.disconnect()
