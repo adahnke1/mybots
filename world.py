@@ -1,9 +1,12 @@
 import pybullet as p
 import pybullet_data
 import pyrosim.pyrosim as pyrosim
-physicsClient = p.connect(p.GUI)
+
 
 class WORLD:
     def __init__(self):
-        self.planeId = p.loadURDF("plane.urdf")
+        self.physicsClient = p.connect(p.GUI)
+        p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.loadSDF("world.sdf")
+        self.planeId = p.loadURDF("plane.urdf")
+        

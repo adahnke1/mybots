@@ -32,5 +32,5 @@ from world import WORLD
 #numpy.save('/Users/adahnke1/Documents/GitHub/mybots/data/FrontLegtargetAngles', (c.FrontLegtargetAngles), allow_pickle = True, fix_imports = True)
 #p.disconnect()
 simulation = SIMULATION()
-simulation.Run
+simulation.Run()
 
